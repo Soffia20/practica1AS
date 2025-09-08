@@ -27,7 +27,6 @@ con = mysql.connector.connect(
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/pusherProductos")
 def pusherProductos():
     import pusher
     
@@ -250,6 +249,7 @@ def eliminarProducto():
     con.close()
 
     return make_response(jsonify({}))
+
 
 
 
