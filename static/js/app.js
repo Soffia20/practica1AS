@@ -57,6 +57,20 @@ app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, 
 
     $rootScope.$on("$routeChangeSuccess", function (event, current, previous) {
         $("html").css("overflow-x", "hidden")
+
+        document.addEventListener("DOMConectLoades", function () {
+            // Enable pusher logging - don't include this in production
+            Pusher.logToConsole = true;
+        
+            var pusher = new Pusher("bf79fc5f8fe969b1839e", {
+              cluster: "us2"
+            });
+        
+            var channel = pusher.subscribe("canalProductos")
+            channel.bind("eventoProductos", function(data) {
+                alert(JSON.stringify(data));
+            }) 
+        })
         
         const path = current.$$route.originalPath
 
@@ -153,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
