@@ -97,7 +97,7 @@ app.controller("productosCtrl", function ($scope, $http) {
     var pusher = new Pusher("e57a8ad0a9dc2e83d9a2", {
       cluster: "us2"
     })
-
+    
     var channel = pusher.subscribe("canalProductos")
     channel.bind("eventoProductos", function(data) {
         // alert(JSON.stringify(data))
@@ -153,6 +153,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
