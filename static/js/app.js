@@ -24,9 +24,9 @@ app.config(function ($routeProvider, $locationProvider) {
 
 
 
-    .when("/decoraciones", {
-        templateUrl: "/decoraciones",
-        controller: "decoracionesCtrl"
+    .when("/clientes", {
+        templateUrl: "/clientes",
+        controller: "clientesCtrl"
     })
 
 
@@ -138,10 +138,10 @@ app.controller("productosCtrl", function ($scope, $http) {
 
 
 
-app.controller("decoracionesCtrl", function ($scope, $http) {
-    function buscarDecoraciones() {
-        $.get("/tbodyDecoraciones", function (trsHTML) {
-            $("#tbodyDecoraciones").html(trsHTML)
+app.controller("clientesCtrl", function ($scope, $http) {
+    function buscarClientes() {
+        $.get("/tbodyClientes", function (trsHTML) {
+            $("#tbodyClientes").html(trsHTML)
         })
     }
 
@@ -154,20 +154,20 @@ app.controller("decoracionesCtrl", function ($scope, $http) {
       cluster: "us2"
     })
 
-    var channel = pusher.subscribe("canalDecoraciones")
-    channel.bind("eventoDecoraciones", function(data) {
+    var channel = pusher.subscribe("canalClientes")
+    channel.bind("eventoClientes", function(data) {
         // alert(JSON.stringify(data))
-        buscarDecoraciones()
+        buscarClientes()
     })
 
     $(document).on("submit", "#frmDecoracion", function (event) {
         event.preventDefault()
 
-        $.post("/decoracion", {
+        $.post("/clientes", {
             id: "",
-            nombre: $("#txtNombre").val(),
-            precio: $("#txtPrecio").val(),
-            existencias: $("#txtExistencias").val(),
+            nombre: $("#txtNombreCliente").val(),
+            precio: $("#txtTelefono").val(),
+            existencias: $("#CorreoElectronico").val(),
         })
     })
 })
@@ -191,3 +191,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
