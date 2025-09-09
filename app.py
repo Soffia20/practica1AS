@@ -57,6 +57,7 @@ def app2():
 
     con.close()
 
+    return render_template("login.html")
     # return "<h5>Hola, soy la view app</h5>"
 
 @app.route("/iniciarSesion", methods=["POST"])
@@ -85,11 +86,9 @@ def iniciarSesion():
 
     return make_response(jsonify(registros))
 
-
 @app.route("/productos")
 def productos():
     return render_template("productos.html")
-
 
 @app.route("/tbodyProductos")
 def tbodyProductos():
@@ -126,7 +125,7 @@ def tbodyProductos():
     return render_template("tbodyProductos.html", productos=registros)
 
 @app.route("/productos/ingredientes/<int:id>")
-def productos2(id):
+def productosIngredientes(id):
     if not con.is_connected():
         con.reconnect()
 
@@ -276,11 +275,3 @@ def eliminarProducto():
     con.close()
 
     return make_response(jsonify({}))
-
-
-
-
-
-
-
-
