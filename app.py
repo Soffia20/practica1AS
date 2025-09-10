@@ -323,10 +323,12 @@ def guardarCliente():
     if not con.is_connected():
         con.reconnect()
 
-    id          = request.form["idCliente"]
+    idCliente          = request.form["idCliente"]
     nombre      = request.form["nombreCliente"]
     telefono      = request.form["telefono"]
-    correoElectronico = request.form["correoElectronico"]
+    correo = request.form["correoElectronico"]
+
+
     # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
     
     cursor = con.cursor()
@@ -341,13 +343,13 @@ def guardarCliente():
 
         WHERE Id_Producto = %s
         """
-        val = (nombre, telefono, correoElectronico, id)
+        val = (nombre, telefono, correo, idCliente)
     else:
         sql = """
         INSERT INTO clientes (nombreCliente, telefono, correoElectronico)
                     VALUES    (%s,          %s,      %s)
         """
-        val =                 (nombre, telefono, correoElectronico)
+        val =                 (nombre, telefono, correo)
     
     cursor.execute(sql, val)
     con.commit()
