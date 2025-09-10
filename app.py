@@ -323,17 +323,16 @@ def guardarCliente():
     if not con.is_connected():
         con.reconnect()
 
-    id          = request.form["id"]
-    nombre      = request.form["nombreCliente"]
-    telefono      = request.form["telefono"]
-    correo = request.form["correoElectronico"]
-
-
+    idCliente = request.form.get("idCliente")  
+    nombre    = request.form.get("nombreCliente")
+    telefono  = request.form.get("telefono")
+    correo    = request.form.get("correoElectronico")
+    
     # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
     
     cursor = con.cursor()
 
-    if id:
+    if idCliente:
         sql = """
         UPDATE clientes
 
@@ -400,5 +399,3 @@ def eliminarCliente():
     con.close()
 
     return make_response(jsonify({}))
-
-
