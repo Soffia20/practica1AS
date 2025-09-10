@@ -1,0 +1,8 @@
+{% for cliente in clientes %}
+<tr>
+    <td>{{ cliente.idCliente }}</td>
+    <td>{{ cliente.nombreCliente }}</td>
+    <td>{{ cliente.telefono }}</td>
+    <td>{{ cliente.correoElectronico }}</td>
+</tr>
+{% endfor %}
