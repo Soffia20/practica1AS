@@ -323,7 +323,7 @@ def guardarCliente():
     if not con.is_connected():
         con.reconnect()
 
-    idCliente = request.form.get["idCliente"]   
+    idCliente = request.form.get("idCliente")  
     nombre      = request.form["nombreCliente"]
     telefono      = request.form["telefono"]
     correoElectronico = request.form["correoElectronico"]
