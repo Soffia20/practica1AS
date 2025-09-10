@@ -131,25 +131,57 @@ app.controller("productosCtrl", function ($scope, $http) {
 
 app.controller("clientesCtrl", function ($scope, $http) {
 
-    // Función para cargar la tabla de clientes
     function cargarTablaClientes() {
         $.get("/tbodyClientes", function(html) {
             $("#tbodyClientes").html(html);
         });
     }
 
-    // Llamada inicial para cargar clientes
     cargarTablaClientes();
 
-    // Pusher para actualizar tabla en tiempo real
     Pusher.logToConsole = true;
     var pusher = new Pusher("bf79fc5f8fe969b1839e", { cluster: "us2" });
     var channel = pusher.subscribe("canalClientes");
     channel.bind("eventoClientes", function(data) {
-        cargarTablaClientes(); // actualiza la tabla automáticamente
+        cargarTablaClientes();
     });
 
-    // Guardar cliente
+     $(document).on("click", "#btnBuscarCliente", function() {
+        const busqueda = $("#txtBuscarCliente").val().trim();
+
+        if(busqueda === "") {
+            cargarTablaClientes();
+            return;
+        }
+
+        $.get("/clientes/buscar", { busqueda: busqueda }, function(registros) {
+            let trsHTML = "";
+            registros.forEach(cliente => {
+                trsHTML += `
+                    <tr>
+                        <td>${cliente.idCliente}</td>
+                        <td>${cliente.nombreCliente}</td>
+                        <td>${cliente.telefono}</td>
+                        <td>${cliente.correoElectronico}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm btn-eliminar" data-id="${cliente.idCliente}">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            $("#tbodyClientes").html(trsHTML);
+        }).fail(function(xhr){
+            console.error("Error al buscar clientes:", xhr.responseText);
+        });
+    });
+
+    // Permitir Enter en input
+    $("#txtBuscarCliente").on("keypress", function(e) {
+        if(e.which === 13) {
+            $("#btnBuscarCliente").click();
+        }
+    });
+
     $(document).on("submit", "#frmCliente", function (event) {
         event.preventDefault();
 
@@ -167,7 +199,6 @@ app.controller("clientesCtrl", function ($scope, $http) {
         });
     });
 
-    // Eliminar cliente (delegación de eventos)
     $(document).on("click", "#tbodyClientes .btn-eliminar", function(){
         const id = $(this).data("id");
         if(confirm("¿Deseas eliminar este cliente?")) {
