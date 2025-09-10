@@ -21,17 +21,10 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: "/productos",
         controller: "productosCtrl"
     })
-
-
-
     .when("/clientes", {
         templateUrl: "/clientes",
         controller: "clientesCtrl"
     })
-
-
-
-
     .otherwise({
         redirectTo: "/"
     })
@@ -179,6 +172,17 @@ app.controller("clientesCtrl", function ($scope, $http) {
     $.get("/tbodyClientes", function (trsHTML) {
         $("#tbodyClientes").html(trsHTML)
     })
+
+    $(document).on("click", ".btn-eliminar", function(){
+    const id = $(this).data("id");
+
+    $.post("/clientes/eliminar", {id: id}, function(response){
+        console.log("Cliente eliminado correctamente");
+        // La tabla se actualizará automáticamente por Pusher
+    }).fail(function(xhr){
+        console.error("Error al eliminar cliente:", xhr.responseText);
+    });
+});
 }
 })
 
