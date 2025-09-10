@@ -163,23 +163,23 @@ app.controller("clientesCtrl", function ($scope, $http) {
 
         $.post("/cliente", {
             id: "",
-            nombre: $("#txtNombreCliente").val(),
-            precio: $("#txtTelefono").val(),
-            existencias: $("#txtCorreoElectronico").val(),
-        })
+            nombreCliente: $("#txtNombreCliente").val(),
+            telefono: $("#txtTelefono").val(),
+            correoElectronico: $("#txtCorreoElectronico").val(),
+        }, function(response){
+        console.log("Cliente guardado correctamente");
+        $("#frmCliente")[0].reset(); // limpiar el formulario
+        buscarClientes(); // actualizar tabla
+        }).fail(function(xhr){
+            console.error("Error al guardar cliente:", xhr.responseText);
+        });
     })
 
-    // $(document).on("click", ".btn-ingredientes", function (event) {
-    //     const id = $(this).data("id")
-
-    //     $.get(`/productos/ingredientes/${id}`, function (html) {
-    //         modal(html, "Ingredientes", [
-    //             {html: "Aceptar", class: "btn btn-secondary", fun: function (event) {
-    //                 closeModal()
-    //             }}
-    //         ])
-    //     })
-    // })
+    function buscarClientes() {
+    $.get("/tbodyClientes", function (trsHTML) {
+        $("#tbodyClientes").html(trsHTML)
+    })
+}
 })
 
 
@@ -200,4 +200,3 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
-
