@@ -17,10 +17,6 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: "/app",
         controller: "appCtrl"
     })
-    .when("/productos", {
-        templateUrl: "/productos",
-        controller: "productosCtrl"
-    })
     .when("/clientes", {
         templateUrl: "/clientes",
         controller: "clientesCtrl"
@@ -80,51 +76,6 @@ app.controller("appCtrl", function ($scope, $http) {
             }
 
             alert("Usuario y/o Contraseña Incorrecto(s)")
-        })
-    })
-})
-app.controller("productosCtrl", function ($scope, $http) {
-    function buscarProductos() {
-        $.get("/tbodyProductos", function (trsHTML) {
-            $("#tbodyProductos").html(trsHTML)
-        })
-    }
-
-    buscarProductos()
-    
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true
-
-    var pusher = new Pusher("e57a8ad0a9dc2e83d9a2", {
-      cluster: "us2"
-    })
-
-    var channel = pusher.subscribe("canalProductos")
-    channel.bind("eventoProductos", function(data) {
-        // alert(JSON.stringify(data))
-        buscarProductos()
-    })
-
-    $(document).on("submit", "#frmProducto", function (event) {
-        event.preventDefault()
-
-        $.post("/producto", {
-            id: "",
-            nombre: $("#txtNombre").val(),
-            precio: $("#txtPrecio").val(),
-            existencias: $("#txtExistencias").val(),
-        })
-    })
-
-    $(document).on("click", ".btn-ingredientes", function (event) {
-        const id = $(this).data("id")
-
-        $.get(`/productos/ingredientes/${id}`, function (html) {
-            modal(html, "Ingredientes", [
-                {html: "Aceptar", class: "btn btn-secondary", fun: function (event) {
-                    closeModal()
-                }}
-            ])
         })
     })
 })
