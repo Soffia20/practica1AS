@@ -317,46 +317,45 @@ def tbodyClientes():
     return render_template("tbodyClientes.html", clientes=registros)
 
 @app.route("/cliente", methods=["POST"])
-# Usar cuando solo se quiera usar CORS en rutas específicas
-# @cross_origin()
 def guardarCliente():
-    if not con.is_connected():
-        con.reconnect()
+    try:
+        if not con.is_connected():
+            con.reconnect()
 
-    idCliente = request.form["idCliente"]
-    nombre      = request.form["nombreCliente"]
-    telefono      = request.form["telefono"]
-    correoElectronico = request.form["correoElectronico"]
-    
-    # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
-    
-    cursor = con.cursor()
+        idCliente = request.form.get("idCliente")  
+        nombre = request.form["nombreCliente"]
+        telefono = request.form["telefono"]
+        correoElectronico = request.form["correoElectronico"]
 
-    if idCliente:
-        sql = """
-        UPDATE clientes
+        cursor = con.cursor()
 
-        SET nombreCliente = %s,
-            telefono          = %s,
-            correoElectronico     = %s
+        if idCliente:
+            sql = """
+            UPDATE clientes
+            SET nombreCliente = %s,
+                telefono = %s,
+                correoElectronico = %s
+            WHERE idCliente = %s
+            """
+            val = (nombre, telefono, correoElectronico, idCliente)
+        else:
+            sql = """
+            INSERT INTO clientes (nombreCliente, telefono, correoElectronico)
+            VALUES (%s, %s, %s)
+            """
+            val = (nombre, telefono, correoElectronico)
 
-        WHERE idCliente = %s
-        """
-        val = (nombre, telefono, correoElectronico, idCliente)
-    else:
-        sql = """
-        INSERT INTO clientes (nombreCliente, telefono, correoElectronico)
-                    VALUES    (%s,          %s,      %s)
-        """
-        val =                 (nombre, telefono, correoElectronico)
-    
-    cursor.execute(sql, val)
-    con.commit()
-    con.close()
+        cursor.execute(sql, val)
+        con.commit()
+        return make_response(jsonify({"status": "ok"}))
 
-    pusherProductos()
-    
-    return make_response(jsonify({}))
+    except Exception as e:
+        print("Error en /cliente:", e)
+        return make_response(jsonify({"error": str(e)}), 500)
+
+    finally:
+        con.close()
+
 
 @app.route("/cliente/<int:id>")
 def editarClientes(id):
@@ -399,4 +398,3 @@ def eliminarCliente():
     con.close()
 
     return make_response(jsonify({}))
-
