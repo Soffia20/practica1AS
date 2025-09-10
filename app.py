@@ -323,7 +323,7 @@ def guardarCliente():
     if not con.is_connected():
         con.reconnect()
 
-    idCliente          = request.form["idCliente"]
+    id          = request.form["id"]
     nombre      = request.form["nombreCliente"]
     telefono      = request.form["telefono"]
     correo = request.form["correoElectronico"]
@@ -400,4 +400,5 @@ def eliminarCliente():
     con.close()
 
     return make_response(jsonify({}))
+
 
