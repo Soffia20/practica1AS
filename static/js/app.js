@@ -130,29 +130,28 @@ app.controller("productosCtrl", function ($scope, $http) {
 })
 
 app.controller("clientesCtrl", function ($scope, $http) {
-    function buscarProductos() {
-        $.get("/tbodyClientes", function (trsHTML) {
-            $("#tbodyClientes").html(trsHTML)
-        })
+
+    // Función para cargar la tabla de clientes
+    function cargarTablaClientes() {
+        $.get("/tbodyClientes", function(html) {
+            $("#tbodyClientes").html(html);
+        });
     }
 
-    buscarProductos()
-    
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true
+    // Llamada inicial para cargar clientes
+    cargarTablaClientes();
 
-    var pusher = new Pusher("bf79fc5f8fe969b1839e", {
-      cluster: "us2"
-    })
-
-    var channel = pusher.subscribe("canalClientes")
+    // Pusher para actualizar tabla en tiempo real
+    Pusher.logToConsole = true;
+    var pusher = new Pusher("bf79fc5f8fe969b1839e", { cluster: "us2" });
+    var channel = pusher.subscribe("canalClientes");
     channel.bind("eventoClientes", function(data) {
-        // alert(JSON.stringify(data))
-        buscarProductos()
-    })
+        cargarTablaClientes(); // actualiza la tabla automáticamente
+    });
 
+    // Guardar cliente
     $(document).on("submit", "#frmCliente", function (event) {
-        event.preventDefault()
+        event.preventDefault();
 
         $.post("/cliente", {
             id: "",
@@ -160,32 +159,28 @@ app.controller("clientesCtrl", function ($scope, $http) {
             telefono: $("#txtTelefono").val(),
             correoElectronico: $("#txtCorreoElectronico").val(),
         }, function(response){
-        console.log("Cliente guardado correctamente");
-        $("#frmCliente")[0].reset(); // limpiar el formulario
-        buscarClientes(); // actualizar tabla
+            console.log("Cliente guardado correctamente");
+            $("#frmCliente")[0].reset();
+            cargarTablaClientes(); 
         }).fail(function(xhr){
             console.error("Error al guardar cliente:", xhr.responseText);
         });
-    })
-
-    function buscarClientes() {
-    $.get("/tbodyClientes", function (trsHTML) {
-        $("#tbodyClientes").html(trsHTML)
-    })
-
-    $(document).on("click", ".btn-eliminar", function(){
-    const id = $(this).data("id");
-
-    $.post("/clientes/eliminar", {id: id}, function(response){
-        console.log("Cliente eliminado correctamente");
-        // La tabla se actualizará automáticamente por Pusher
-    }).fail(function(xhr){
-        console.error("Error al eliminar cliente:", xhr.responseText);
     });
-});
-}
-})
 
+    // Eliminar cliente (delegación de eventos)
+    $(document).on("click", "#tbodyClientes .btn-eliminar", function(){
+        const id = $(this).data("id");
+        if(confirm("¿Deseas eliminar este cliente?")) {
+            $.post("/clientes/eliminar", {id: id}, function(response){
+                console.log("Cliente eliminado correctamente");
+                cargarTablaClientes(); 
+            }).fail(function(xhr){
+                console.error("Error al eliminar cliente:", xhr.responseText);
+            });
+        }
+    });
+
+});
 
 const DateTime = luxon.DateTime
 let lxFechaHora
