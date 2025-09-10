@@ -136,16 +136,14 @@ app.controller("productosCtrl", function ($scope, $http) {
     })
 })
 
-
-
 app.controller("clientesCtrl", function ($scope, $http) {
-    function buscarClientes() {
+    function buscarProductos() {
         $.get("/tbodyClientes", function (trsHTML) {
             $("#tbodyClientes").html(trsHTML)
         })
     }
 
-    buscarDecoraciones()
+    buscarProductos()
     
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
@@ -157,21 +155,32 @@ app.controller("clientesCtrl", function ($scope, $http) {
     var channel = pusher.subscribe("canalClientes")
     channel.bind("eventoClientes", function(data) {
         // alert(JSON.stringify(data))
-        buscarClientes()
+        buscarProductos()
     })
 
-    $(document).on("submit", "#frmDecoracion", function (event) {
+    $(document).on("submit", "#frmCliente", function (event) {
         event.preventDefault()
 
-        $.post("/clientes", {
+        $.post("/cliente", {
             id: "",
             nombre: $("#txtNombreCliente").val(),
             precio: $("#txtTelefono").val(),
             existencias: $("#txtCorreoElectronico").val(),
         })
     })
-})
 
+    // $(document).on("click", ".btn-ingredientes", function (event) {
+    //     const id = $(this).data("id")
+
+    //     $.get(`/productos/ingredientes/${id}`, function (html) {
+    //         modal(html, "Ingredientes", [
+    //             {html: "Aceptar", class: "btn btn-secondary", fun: function (event) {
+    //                 closeModal()
+    //             }}
+    //         ])
+    //     })
+    // })
+})
 
 
 const DateTime = luxon.DateTime
@@ -191,5 +200,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
-
 
