@@ -154,7 +154,7 @@ app.controller("clientesCtrl", function ($scope, $http) {
             return;
         }
 
-        $.get("/clientes/buscar", { busqueda: busqueda }, function(registros) {
+        $.get("/api/clientes/buscar", { busqueda: busqueda }, function(registros) {
             let trsHTML = "";
             registros.forEach(cliente => {
                 trsHTML += `
