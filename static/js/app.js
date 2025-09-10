@@ -167,7 +167,7 @@ app.controller("clientesCtrl", function ($scope, $http) {
             id: "",
             nombre: $("#txtNombreCliente").val(),
             precio: $("#txtTelefono").val(),
-            existencias: $("#CorreoElectronico").val(),
+            existencias: $("#txtCorreoElectronico").val(),
         })
     })
 })
@@ -191,4 +191,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
