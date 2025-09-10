@@ -323,7 +323,7 @@ def guardarCliente():
     if not con.is_connected():
         con.reconnect()
 
-    id          = request.form["id"]
+    idCliente = request.form.get["idCliente"]   
     nombre      = request.form["nombreCliente"]
     telefono      = request.form["telefono"]
     correoElectronico = request.form["correoElectronico"]
@@ -332,7 +332,7 @@ def guardarCliente():
     
     cursor = con.cursor()
 
-    if id:
+    if idCliente:
         sql = """
         UPDATE clientes
 
@@ -342,7 +342,7 @@ def guardarCliente():
 
         WHERE idCliente = %s
         """
-        val = (nombre, telefono, correoElectronico, id)
+        val = (nombre, telefono, correoElectronico, idCliente)
     else:
         sql = """
         INSERT INTO clientes (nombreCliente, telefono, correoElectronico)
