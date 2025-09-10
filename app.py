@@ -316,6 +316,68 @@ def tbodyClientes():
 
     return render_template("tbodyClientes.html", clientes=registros)
 
+@app.route("/cliente", methods=["POST"])
+# Usar cuando solo se quiera usar CORS en rutas específicas
+# @cross_origin()
+def guardarCliente():
+    if not con.is_connected():
+        con.reconnect()
+
+    id          = request.form["idCliente"]
+    nombre      = request.form["nombreCliente"]
+    telefono      = request.form["telefono"]
+    correoElectronico = request.form["correoElectronico"]
+    # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
+    
+    cursor = con.cursor()
+
+    if id:
+        sql = """
+        UPDATE clientes
+
+        SET nombreCliente = %s,
+            telefono          = %s,
+            correoElectronico     = %s
+
+        WHERE Id_Producto = %s
+        """
+        val = (nombre, telefono, correoElectronico, id)
+    else:
+        sql = """
+        INSERT INTO clientes (nombreCliente, telefono, correoElectronico)
+                    VALUES    (%s,          %s,      %s)
+        """
+        val =                 (nombre, telefono, correoElectronico)
+    
+    cursor.execute(sql, val)
+    con.commit()
+    con.close()
+
+    pusherProductos()
+    
+    return make_response(jsonify({}))
+
+@app.route("/cliente/<int:id>")
+def editarClientes(id):
+    if not con.is_connected():
+        con.reconnect()
+
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT idCliente, nombreCliente, telefono, correoElectronico
+
+    FROM clientes
+
+    WHERE idCliente = %s
+    """
+    val    = (id,)
+
+    cursor.execute(sql, val)
+    registros = cursor.fetchall()
+    con.close()
+
+    return make_response(jsonify(registros))
+
 
 @app.route("/clientes/eliminar", methods=["POST"])
 def eliminarCliente():
