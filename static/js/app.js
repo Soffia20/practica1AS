@@ -148,7 +148,7 @@ app.controller("clientesCtrl", function ($scope, $http) {
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
 
-    var pusher = new Pusher("e57a8ad0a9dc2e83d9a2", {
+    var pusher = new Pusher("bf79fc5f8fe969b1839e", {
       cluster: "us2"
     })
 
