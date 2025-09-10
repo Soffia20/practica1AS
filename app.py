@@ -27,18 +27,18 @@ con = mysql.connector.connect(
 app = Flask(__name__)
 CORS(app)
 
-def pusherProductos():
+def pusherClientes():
     import pusher
     
     pusher_client = pusher.Pusher(
-      app_id="2046005",
-      key="e57a8ad0a9dc2e83d9a2",
-      secret="8a116dd9600a3b04a3a0",
-      cluster="us2",
-      ssl=True
+        app_id='2047513',
+        key='bf79fc5f8fe969b1839e',
+        secret='9b73ac4b30f41a28c732',
+        cluster='us2',
+        ssl=True
     )
     
-    pusher_client.trigger("canalProductos", "eventoProductos", {"message": "Hola Mundo!"})
+    pusher_client.trigger("canalClientes", "eventoClientes", {"message": "Hola Mundo!"})
     return make_response(jsonify({}))
 
 @app.route("/")
@@ -317,45 +317,46 @@ def tbodyClientes():
     return render_template("tbodyClientes.html", clientes=registros)
 
 @app.route("/cliente", methods=["POST"])
+# Usar cuando solo se quiera usar CORS en rutas específicas
+# @cross_origin()
 def guardarCliente():
-    try:
-        if not con.is_connected():
-            con.reconnect()
+    if not con.is_connected():
+        con.reconnect()
 
-        idCliente = request.form.get("idCliente")  
-        nombre = request.form["nombreCliente"]
-        telefono = request.form["telefono"]
-        correoElectronico = request.form["correoElectronico"]
+    idCliente = request.form.get("idCliente")
+    nombre      = request.form["nombreCliente"]
+    telefono      = request.form["telefono"]
+    correoElectronico = request.form["correoElectronico"]
+    
+    # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
+    
+    cursor = con.cursor()
 
-        cursor = con.cursor()
+    if idCliente:
+        sql = """
+        UPDATE clientes
 
-        if idCliente:
-            sql = """
-            UPDATE clientes
-            SET nombreCliente = %s,
-                telefono = %s,
-                correoElectronico = %s
-            WHERE idCliente = %s
-            """
-            val = (nombre, telefono, correoElectronico, idCliente)
-        else:
-            sql = """
-            INSERT INTO clientes (nombreCliente, telefono, correoElectronico)
-            VALUES (%s, %s, %s)
-            """
-            val = (nombre, telefono, correoElectronico)
+        SET nombreCliente = %s,
+            telefono          = %s,
+            correoElectronico     = %s
 
-        cursor.execute(sql, val)
-        con.commit()
-        return make_response(jsonify({"status": "ok"}))
+        WHERE idCliente = %s
+        """
+        val = (nombre, telefono, correoElectronico, idCliente)
+    else:
+        sql = """
+        INSERT INTO clientes (nombreCliente, telefono, correoElectronico)
+                    VALUES    (%s,          %s,      %s)
+        """
+        val =                 (nombre, telefono, correoElectronico)
+    
+    cursor.execute(sql, val)
+    con.commit()
+    con.close()
 
-    except Exception as e:
-        print("Error en /cliente:", e)
-        return make_response(jsonify({"error": str(e)}), 500)
-
-    finally:
-        con.close()
-
+    pusherClientes()
+    
+    return make_response(jsonify({}))
 
 @app.route("/cliente/<int:id>")
 def editarClientes(id):
