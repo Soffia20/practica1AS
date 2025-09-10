@@ -341,7 +341,7 @@ def guardarCliente():
             telefono          = %s,
             correoElectronico     = %s
 
-        WHERE Id_Producto = %s
+        WHERE idCliente = %s
         """
         val = (nombre, telefono, correo, idCliente)
     else:
@@ -400,3 +400,4 @@ def eliminarCliente():
     con.close()
 
     return make_response(jsonify({}))
+
