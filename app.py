@@ -192,7 +192,7 @@ def buscarClientes():
         registros = []
 
     finally:
-        con.close()
+        cursor.close()
 
     return make_response(jsonify(registros))
 
@@ -282,4 +282,5 @@ def eliminarCliente():
     except Exception as e:
         print("Error eliminando cliente:", e)
         return make_response(jsonify({"error": str(e)}), 500)
+
 
