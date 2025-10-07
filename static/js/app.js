@@ -136,17 +136,20 @@ app.controller("clientesCtrl", function ($scope, $http) {
     $(document).on("submit", "#frmCliente", function (event) {
         event.preventDefault();
 
+        const idCliente = $("#idCliente").val(); // Oculto en el form
+
         $.post("/cliente", {
-            id: "",
-            nombreCliente: $("#txtNombreCliente").val(),
+            idCliente: idCliente,
+            nombre: $("#txtNombreCliente").val(),
             telefono: $("#txtTelefono").val(),
             correoElectronico: $("#txtCorreoElectronico").val(),
         }, function(response){
-            console.log("Cliente guardado correctamente");
+            console.log("Cliente guardado o actualizado correctamente");
             $("#frmCliente")[0].reset();
+            $("#idCliente").val(""); // limpiar campo oculto
             cargarTablaClientes(); 
         }).fail(function(xhr){
-            console.error("Error al guardar cliente:", xhr.responseText);
+            console.error("Error al guardar/actualizar cliente:", xhr.responseText);
         });
     });
 
@@ -181,4 +184,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
