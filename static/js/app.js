@@ -164,6 +164,25 @@ app.controller("clientesCtrl", function ($scope, $http) {
             });
         }
     });
+        // ======== BOTÓN EDITAR ========
+    $(document).on("click", "#tbodyClientes .btn-editar", function() {
+        const id = $(this).data("id");
+        const nombre = $(this).data("nombre");
+        const telefono = $(this).data("telefono");
+        const correo = $(this).data("correo");
+
+        // Rellenar el formulario
+        $("#idCliente").val(id);
+        $("#txtNombreCliente").val(nombre);
+        $("#txtTelefono").val(telefono);
+        $("#txtCorreoElectronico").val(correo);
+
+        // Cambiar el texto del botón para indicar que está en modo actualización
+        const btnGuardar = $("#btnGuardar");
+        btnGuardar.text("Actualizar");
+        btnGuardar.removeClass("btn-primary").addClass("btn-success");
+    });
+
 
 });
 
@@ -184,5 +203,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
