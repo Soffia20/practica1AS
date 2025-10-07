@@ -166,10 +166,10 @@ app.controller("clientesCtrl", function ($scope, $http) {
     });
         // ======== BOTÓN EDITAR ========
     $(document).on("click", "#tbodyClientes .btn-editar", function() {
-        const id = $(this).data("idCliente");
-        const nombre = $(this).data("txtNombreCliente");
-        const telefono = $(this).data("txtTelefono");
-        const correo = $(this).data("txtCorreoElectronico");
+        const id = $(this).data("id");
+        const nombre = $(this).data("nombre");
+        const telefono = $(this).data("telefono");
+        const correo = $(this).data("correo");
 
         // Rellenar el formulario
         $("#idCliente").val(id);
@@ -203,6 +203,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
