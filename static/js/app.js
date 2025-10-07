@@ -140,9 +140,9 @@ app.controller("clientesCtrl", function ($scope, $http) {
 
         $.post("/cliente", {
             idCliente: idCliente,
-            nombre: $("#txtNombreCliente").val(),
+            nombreCliente: $("#txtNombreCliente").val(),
             telefono: $("#txtTelefono").val(),
-            correoElectronico: $("#txtCorreoElectronico").val(),
+            correoElectronico: $("#txtCorreoElectronico").val()
         }, function(response){
             console.log("Cliente guardado o actualizado correctamente");
             $("#frmCliente")[0].reset();
@@ -151,6 +151,7 @@ app.controller("clientesCtrl", function ($scope, $http) {
         }).fail(function(xhr){
             console.error("Error al guardar/actualizar cliente:", xhr.responseText);
         });
+
     });
 
     $(document).on("click", "#tbodyClientes .btn-eliminar", function(){
@@ -203,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
